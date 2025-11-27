@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/")
 def home():
@@ -9,11 +11,15 @@ def home():
 @app.route("/bmi", methods=["POST"])
 def calculate_bmi():
     data = request.get_json()
+
     weight = data.get("weight")
     height = data.get("height")
 
     if not weight or not height:
         return jsonify({"error": "يرجى إدخال الوزن والطول"}), 400
+
+    # تحويل الطول من سم إلى متر
+    height = height / 100
 
     bmi = weight / (height ** 2)
 
@@ -35,3 +41,7 @@ def calculate_bmi():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
+
+
+
+
